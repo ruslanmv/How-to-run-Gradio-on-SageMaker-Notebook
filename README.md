@@ -177,8 +177,6 @@ pip install pyngrok gradio
 
 
 
-
-
 ## Step 4 - Setup pyngrok
 
 Let us open a new notebook 
@@ -205,8 +203,6 @@ YOUR_TOKEN="2DrXaskdhakjsdhkashjdkadjshdkashg8m8uf1R4gPZiTrDzY2"
 ngrok.set_auth_token(YOUR_TOKEN)
 IPython.Application.instance().kernel.do_shutdown(True)
 ```
-
-
 
 now the tokem
 
@@ -273,13 +269,7 @@ After is running this  open your webrowser , for example edge
 
 **[https://1ce4-34-236-55-223.ngrok.io](https://1ce4-34-236-55-223.ngrok.io/)**
 
-![image-20220829000107971](assets/images/posts/README/image-20220829000107971.png)Dont worry if Chrome says: Deceptive site ahead Attackers on **8c5c-34-236-55-223.ngrok.io** may trick you into doing something dangerous
-
-You click visit this site.
-
-![image-20220829000229401](assets/images/posts/README/image-20220829000229401.png)
-
-
+![image-20220829000107971](assets/images/posts/README/image-20220829000107971.png)Dont worry if Chrome says: Deceptive site ahead Attackers on **8c5c-34-236-55-223.ngrok.io** may trick you into doing something dangerous You click visit this site.
 
 Somehow Chrome marked ngrok.io like a dangerous, to avoid this type of issues you can select another method to log into SageMaker,  like I have done in previous blog  [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH)
 
@@ -307,9 +297,7 @@ ngrok http 8089
 
 
 
-# Machine Learning Model
-
-
+# Text to Video - Dalle
 
 To install the Python packages in the correct Conda environment, first activate the environment before running **pip install** or **conda install** from the terminal.
 
@@ -325,13 +313,7 @@ To activate any conda environment, run the following command in the terminal.
 
 When you run this command, any packages installed using conda or pip are installed in the environment.
 
-To use your new conda environments with notebooks, make sure the `ipykernel` package is installed in the environment.
-
-```
-(pytorch_p38) sh-4.2$ conda install ipykernel
-```
-
-in addition we need
+In addition we need
 
 ```
 conda install ffmpeg -c conda-forge -y
@@ -339,7 +321,13 @@ conda install ffmpeg -c conda-forge -y
 
 and finally we clone the following repository 
 
+```
+git clone https://github.com/ruslanmv/Text-to-Video-Story.git
+```
 
+```
+cd Text-to-Video-Story/gradio
+```
 
 ```
 pip install -r requirements.txt
