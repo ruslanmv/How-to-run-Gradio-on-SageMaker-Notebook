@@ -96,31 +96,25 @@ In Sagemaker we will choose the Notebook instances, click **create a notebook in
 
 
 
-then we name our server as **Sagemaker** . There are a vast of types of AWS Instaces, for our GPU consuming   I suggest use the Amazon EC2 G4 instances that  provide the latest generation **NVIDIA T4 GPUs**.
-
-Moreover **Amazon EC2 G4 instances** deliver a cost-effective GPU instance for deploying machine learning models in production and graphics-intensive applications. 
-
-These instances deliver up to 65 TFLOPs of FP16 performance to accelerate machine learning inference applications and ray-tracing cores to accelerate graphics workloads such as graphics workstations, video transcoding, and game streaming in the cloud.
+then we name our server as **Sagemaker** . There are a vast of types of AWS Instaces, for our GPU consuming   
 
 
+
+Due to our WebApp requires more than **16 GPU Memory (GiB)** we will  choose the ml.g5 instances.
 
 **You should be careful,** choose the appropriate instance, to avoid extra costs!!!
-
-
-
-
 
 | Accelerated Computing | vCPU | Memory  | Price per Hour | **GPU Memory (GiB)** |
 | :-------------------: | :--: | :-----: | :------------: | -------------------- |
 |     ml.g5.xlarge      |  4   | 16 GiB  |     $1.41      | 24                   |
 |     ml.p3.8xlarge     |  32  | 244 GiB |    $14.688     | 64                   |
-|    ml.g5.12xlarge     |  48  | 192 GiB |     $7.09      | 96                   |
+|  **ml.g5.12xlarge**   |  48  | 192 GiB |   **$7.09**    | 96                   |
 
-In particular this instance **ml.g5.xlarge**   , during the writing time, you will pay **$1.41 per Hour** so  be sure to delete your Instance after you finish.
+In particular this instance **ml.g5.12xlarge** , during the writing time, you will pay **$7.09 per Hour** so  be sure to delete your Instance after you finish!!!.
 
-In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g5.xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
+In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g5.12xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
 
-![image-20220829180729972](assets/images/posts/README/image-20220829180729972.png)
+![image-20220829224436367](assets/images/posts/README/image-20220829224436367.png)
 
  In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
 
@@ -128,7 +122,7 @@ In the **Notebook instance settings**, we name the instance as **Sagemaker** and
 
 and finally **create the notebook instance** and we wait until the Status changes from **Pending** to **InService.**
 
-![image-20220824224136683](assets/images/posts/README/image-20220824224136683.png)
+![image-20220829224714472](assets/images/posts/README/image-20220829224714472.png)
 
 
 
@@ -212,13 +206,19 @@ after all the requirements well installed.
 
 ## Step 4 - Setup pyngrok
 
-Let  click File > New > Text File
+Then select **data.json**, open with and editor
+
+![image-20220829222215887](assets/images/posts/README/image-20220829222215887.png)
+
+
+
+
 
 ![image-20220829203610311](assets/images/posts/README/image-20220829203610311.png)
 
 
 
-that your rename to  **data.json**, and paste your token between the " "  , for example
+and paste your token between the " "  , for example
 
 ```
 {
@@ -228,7 +228,7 @@ that your rename to  **data.json**, and paste your token between the " "  , for 
 
 Let us open a the **reverse_proxy.ipynb** notebook
 
-![image-20220829203255680](assets/images/posts/README/image-20220829203255680.png)
+![image-20220829222531646](assets/images/posts/README/image-20220829222531646.png)
 
 
 
@@ -278,7 +278,7 @@ display(HTML(f'<b><a target="blank" href="{http_url}">Load test: {http_url}</a><
 
 You will have something similar like:
 
-**[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
+**[Load test: https://944e-34-236-55-223.ngrok.io](https://944e-34-236-55-223.ngrok.io/)**
 
 ```python
 # Open a SSH tunnel
@@ -289,7 +289,7 @@ display(HTML(f'<b><a target="blank" href="{ssh_tunnel}">SSH test: {ssh_tunnel}</
 
 You will have something similar like:
 
-**["localhost:22"">SSH test: NgrokTunnel: "tcp://4.tcp.ngrok.io:10753" -> "localhost:22"](ngroktunnel:)**
+**["localhost:22"">SSH test: NgrokTunnel: "tcp://2.tcp.ngrok.io:14454" -> "localhost:22"](ngroktunnel:)**
 
 you can see your status
 
@@ -333,7 +333,7 @@ test()
 
 After is running this  return back to your **reverse_proxy** notebook and click the link
 
-**[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
+**[Load test: https://944e-34-236-55-223.ngrok.io](https://944e-34-236-55-223.ngrok.io/)**
 
 then click **Visit Site**
 
@@ -365,7 +365,7 @@ Would you like stop gradio server? (y/N)  y
 Closing server running on port: 7860
 ```
 
-For complementary you can use also the terminal to use ngrok, but we wont use for this project
+For complementary you can use also the terminal to use ngrok, but we wont use for this project (dont run now)
 
 ```
 ngrok authtoken YOUR_TOKEN_HERE
@@ -389,7 +389,7 @@ when you click ctrl+c, the server is stoped.
 
 Finally  we have built all the Infrastructure in the cloud needed to create our amazing video story.
 
-Go to your Sagemaker folder and open **video_story_creator_gradio.ipynb**
+Go to your **Sagemaker** folder of the repo and open **video_story_creator_gradio.ipynb**
 
 ![image-20220829210152091](assets/images/posts/README/image-20220829210152091.png)
 
@@ -441,20 +441,20 @@ if use_gpu == True : log_gpu_memory()
 #model.to(device)
 ```
 
-![image-20220829210506899](assets/images/posts/README/image-20220829210506899.png)
+![image-20220829223202893](assets/images/posts/README/image-20220829223202893.png)
 
-You can see that we have a Great **Tesla T4** GPU.
+You can see that we have a Great **NVIDIA A10G** GPU.
 
 Run the next shell
 
 ![image-20220829171251772](assets/images/posts/README/image-20220829171251772.png)
 
-then return back to your **reverse_proxy.ipynb**  
+then return back to your previous link and refresh
 
 **[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
 
-and will open
+you will have
 
 ![image-20220829210815583](assets/images/posts/README/image-20220829210815583.png)
 
-when you click Generate Video, in your notebook you can see the progress
+when you click **Generate Video**, to test our **WebApp**, in your notebook you can see the progress
