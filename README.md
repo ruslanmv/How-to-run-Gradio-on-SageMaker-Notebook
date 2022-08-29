@@ -8,8 +8,6 @@ In this blog post I will show how to create a web application on **AWS SageMaker
 
 In particular we will create an application that will create a **video from a text** by using one of the amazing techniques to generation of images from a text by using **DALL-E**.
 
-I
-
 The video that I am interested to create is about the **The Hare & the Tortoise** and the  **Selfish Giant**, I am going to create a WebApplication that will create from the text a video story based on the experienced that the machine learning model has.
 
 
@@ -50,19 +48,17 @@ Due to **AWS Sagemaker** notebook officially does not support **ssh** support na
 
 
 
-FIrst create account on [https://ngrok.com/signup]( https://ngrok.com/signup)
+First create account on [https://ngrok.com/signup]( https://ngrok.com/signup)
 
 [![image-20220827200836580](assets/images/posts/README/image-20220827200836580.png)]( https://ngrok.com/signup)
 
-after you created your account  and confirm your email, you can copy the Authtoken
+after you created your account  and confirm your email, you can copy the **Authtoken**
 
 ![image-20220827201513724](assets/images/posts/README/image-20220827201513724.png)
 
 you will use this Token to get the URL site of your web applications.
 
 ## Step 2- Creation of Security Group for SageMaker
-
-
 
 In ordering to communicate with Sagemaker Notebook Instance we need create a custom  **Security Groups**.
 
@@ -118,24 +114,19 @@ These instances deliver up to 65 TFLOPs of FP16 performance to accelerate machin
 |     ml.p3.8xlarge     |  32  | 244 GiB |    $14.688     |
 |    ml.p3.16xlarge     |  64  | 488 GiB |    $28.152     |
 |    ml.g4dn.xlarge     |  4   | 16 GiB  |    $0.7364     |
+|    ml.g4dn.2xlarge    |  8   | 32 GiB  |     $0.94      |
 
-In particular this instance **ml.g4dn.xlarge**   , during the writing time, you will pay **$0.7364 per Hour** so  be sure to delete your Instance after you finish.
+In particular this instance **ml.g4dn.2xlarge**   , during the writing time, you will pay **$0.94 per Hour** so  be sure to delete your Instance after you finish.
 
+In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g4dn.2xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
 
-
-In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance
-
-  **ml.g4dn.xlarge** which has the following specs: 1 GPU, 4 vCPUs, 16 GiB of memory, 125 NVMe SSD, up to 25 Gbps network performance
-
-in addition, we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**
-
-![image-20220829161017050](assets/images/posts/README/image-20220829161017050.png)
+![image-20220829180729972](assets/images/posts/README/image-20220829180729972.png)
 
  In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
 
 ![image-20220828215101584](assets/images/posts/README/image-20220828215101584.png)
 
-and finally **create the notebook instance** and we wait until the Status changes from Pending to InService.
+and finally **create the notebook instance** and we wait until the Status changes from **Pending** to **InService.**
 
 ![image-20220824224136683](assets/images/posts/README/image-20220824224136683.png)
 
@@ -171,9 +162,7 @@ For this project, we are going to use  `pytorch_p38`
 conda activate pytorch_p38
 ```
 
-```
-conda install -n base -c conda-forge jupyterlab_widgets
-```
+If you decided use Jupyter insted JupyterLab you skip the following code:
 
 and we install pyngrok  to get the reverse proxy  and gradio to test the enviroment
 
@@ -193,35 +182,54 @@ Let us open a new notebook
 
 
 
-and we select the kernel  **pytorch_p38**
+and we select the kernel  **pytorch_p38** and name it with **reverse_proxy**
 
 ![image-20220828220558412](assets/images/posts/README/image-20220828220558412.png)
 
 
 
-and we copy the following code
+then create new text file
 
-For the first time copy this code
+![image-20220829175217082](assets/images/posts/README/image-20220829175217082.png)
+
+that your rename to  **data.json**
+
+with your personal token, for example
+
+```
+{
+    "token": "2DwxLpbhkdalskdalskjdalksjdlakjdlakjwcgL3Z2KtUz11"
+}
+```
+
+then for the notetbook r**everse_proxy** copy the following code:
 
 ```python
 #Setup of your token for first time
 import sys, IPython
 from pyngrok import ngrok
-YOUR_TOKEN="2DrXaskdhakjsdhkashjdkadjshdkashg8m8uf1R4gPZiTrDzY2"
+import json 
+# Opening JSON file
+f = open('data.json')
+# returns JSON object as 
+# a dictionary
+data = json.load(f)
+#print(data)
+YOUR_TOKEN=data['token']
 ngrok.set_auth_token(YOUR_TOKEN)
 IPython.Application.instance().kernel.do_shutdown(True)
 ```
 
-now the token
+then  you can run
 
 ```python
 # If is installed the token you can use this code
 import sys, IPython
 from pyngrok import ngrok
 from IPython.core.display import display, HTML
-# Open a HTTP tunnel on port 8089
-# <NgrokTunnel: "http://<public_sub>.ngrok.io" -> "http://localhost:8089">
-http_tunnel = ngrok.connect(8089, bind_tls=True)
+# Open a HTTP tunnel on port 7860
+# <NgrokTunnel: "http://<public_sub>.ngrok.io" -> "http://localhost:7860">
+http_tunnel = ngrok.connect(7860, bind_tls=True)
 http_url = http_tunnel.public_url
 display(HTML(f'<b><a target="blank" href="{http_url}">Load test: {http_url}</a></b>'))
 ```
@@ -248,23 +256,25 @@ tunnels = ngrok.get_tunnels()
 print(tunnels)
 ```
 
+and the output is
+
 ```
-[<NgrokTunnel: "https://1ce4-34-236-55-223.ngrok.io" -> "http://localhost:8089">, <NgrokTunnel: "tcp://8.tcp.ngrok.io:12995" -> "localhost:22">]
+[<NgrokTunnel: "https://1ce4-34-236-55-223.ngrok.io" -> "http://localhost:7860">, <NgrokTunnel: "tcp://8.tcp.ngrok.io:12995" -> "localhost:22">]
 ```
 
 
 
 ## Step 5 Testing Environment
 
-once you have recieved the url of your server ngrok, you can run this following cell
+Now create a new notebook called  **hello_world,** you can add the following code
 
 ```python
+import gradio as gr
 def test():
-    import gradio as gr
     def greet(name):
       return "Hello " + name + "!"
     iface = gr.Interface(fn=greet, inputs="text", outputs="text")
-    iface.launch(server_port=8089)
+    iface.launch(server_port=7860)
 ```
 
 then
@@ -273,27 +283,49 @@ then
 test()
 ```
 
-After is running this  open your webrowser , for example edge
+After is running this  return back to your reverse_proxy notebook and open the link
 
 **[https://1ce4-34-236-55-223.ngrok.io](https://1ce4-34-236-55-223.ngrok.io/)**
 
-![image-20220829000107971](assets/images/posts/README/image-20220829000107971.png)Dont worry if Chrome says: Deceptive site ahead Attackers on **8c5c-34-236-55-223.ngrok.io** may trick you into doing something dangerous You click visit this site.
+and type your name for example,
 
-Somehow Chrome marked ngrok.io like a dangerous, to avoid this type of issues you can select another method to log into SageMaker,  like I have done in previous blog  [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH)
+![image-20220829000107971](assets/images/posts/README/image-20220829000107971.png)Dont worry if 
 
-After you have used you app you can close everything
+If Chrome says: Deceptive site ahead Attackers on **8c5c-34-236-55-223.ngrok.io** ... dont worry. You click visit this site.
+
+Somehow Chrome marked ngrok.io like a dangerous, to avoid this type of issues you can select another method to log into SageMaker,  like in previous blog  [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH).
+
+If your you pass the test, then 
+
+you can close gradio
 
 ```python
-print(" Shutting down server.")
-ngrok.kill()
-gr.close_all()
+msg = 'Would you like stop gradio server?'
+shall = input("%s (y/N) " % msg).lower() == 'y'
+if shall == True:
+    print(" Shutting down gradio server.")
+    gr.close_all()
 ```
+
+by pressing y
+
+```
+Would you like stop gradio server? (y/N)  y
+ Shutting down gradio server.
+Closing server running on port: 8089
+```
+
+
 
 ## Ngrok in the terminal (optional)
 
+For complementary you can use also the terminal to use ngrok
+
 ```
-ngrok authtoken 2DrXaskdhakjsdhkashjdkadjshdkashg8m8uf1R4gPZiTrDzY2
+ ngrok authtoken YOUR_TOKEN_HERE
 ```
+
+and
 
 ```
 ngrok http 8089
@@ -303,11 +335,17 @@ ngrok http 8089
 
 
 
+when you click ctrl+c, the server is stoped, but we wont use the ngrok in the terminal.
 
 
-# Text to Video - Dalle
 
-To install the Python packages in the correct Conda environment, first activate the environment before running **pip install** or **conda install** from the terminal.
+# Creation of Awesome Video Story - Text to Video 
+
+
+
+Finally  we have built all the Infrastructure in the cloud needed to create our amazing video story.
+
+Open a new terminal. To install the Python packages in the correct Conda environment, first activate the environment before running **pip install** or **conda install** from the terminal.
 
 ```
 sh-4.2$ source activate python3
@@ -321,20 +359,24 @@ To activate any conda environment, run the following command in the terminal.
 
 When you run this command, any packages installed using conda or pip are installed in the environment.
 
-In addition we need
+Let us clone the repostory, enter to **Sagemaker** folder
 
 ```
-conda install ffmpeg -c conda-forge -y
+cd Sagemaker
 ```
 
-and finally we clone the following repository 
+then
 
 ```
 git clone https://github.com/ruslanmv/Text-to-Video-Story.git
 ```
 
 ```
-cd Text-to-Video-Story/gradio
+cd Text-to-Video-Story
+```
+
+```
+cd sagemaker
 ```
 
 ```
@@ -343,6 +385,78 @@ pip install -r requirements.txt
 
 you will obtain something like
 
+![image-20220829170233221](assets/images/posts/README/image-20220829170233221.png)
+
+after all the requirements well installed. Let us use **Jupyter**.
+
+Now let us open  **Jupyter**
+
+![image-20220829170332633](assets/images/posts/README/image-20220829170332633.png)
+
+then we choose **video_story_creator_gradio**
+
+![image-20220829170533099](assets/images/posts/README/image-20220829170533099.png)
 
 
-after all the requirements well installed.
+
+you run the first cell
+
+```python
+# Step 2 - Importing Libraries
+from moviepy.editor import *
+from PIL import Image
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM,pipeline
+import gradio as gr
+import torch
+from huggingface_hub import snapshot_download
+from PIL import Image
+from min_dalle import MinDalle
+import torch
+from PIL import Image, ImageDraw, ImageFont
+import textwrap
+from mutagen.mp3 import MP3
+# to speech conversion
+from gtts import gTTS
+from pydub import AudioSegment
+from os import getcwd
+import glob
+import nltk
+import subprocess
+nltk.download('punkt')
+description = " Video Story Generator with Audio \n PS:  Generation of video by using Artifical Intellingence by dalle-mini and distilbart and gtss "
+title = "Video Story Generator with Audio by using dalle-mini and distilbart and gtss  "
+tokenizer = AutoTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
+model = AutoModelForSeq2SeqLM.from_pretrained("sshleifer/distilbart-cnn-12-6")
+```
+
+and then
+
+```python
+# Analsis of GPU usage
+def log_gpu_memory():
+    print(subprocess.check_output('nvidia-smi').decode('utf-8'))
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print(device)
+use_gpu = True if torch.cuda.is_available() else False
+if use_gpu == True : log_gpu_memory() 
+#transfer model
+#model.to(device)
+```
+
+![image-20220829171000145](assets/images/posts/README/image-20220829171000145.png)
+
+You can see that we have a Great **Tesla T4** GPU.
+
+Run the next shell
+
+![image-20220829171251772](assets/images/posts/README/image-20220829171251772.png)
+
+and later you can enter to your url, like mine
+
+**[Load test: https://6119-34-236-55-223.ngrok.io](https://6119-34-236-55-223.ngrok.io/)**
+
+and will open
+
+![image-20220829171810185](assets/images/posts/README/image-20220829171810185.png)
+
+when you click Generate Video, in your notebook you can see the progress
