@@ -8,9 +8,15 @@ In this blog post I will show how to create a web application on **AWS SageMaker
 
 In particular we will create an application that will create a **video from a text** by using one of the amazing techniques to generation of images from a text by using **DALL-E**.
 
-**DALL-E**  is machine learning models developed by OpenAI to generate digital images from  natural language descriptions. 
+I
 
-Let me mention that there is now a new  version called **DALL-E 2**   which is designed  to generate more realistic images at higher resolutions that "can combine concepts, attributes, and styles
+The video that I am interested to create is about the **The Hare & the Tortoise** and the  **Selfish Giant**, I am going to create a WebApplication that will create from the text a video story based on the experienced that the machine learning model has.
+
+
+
+
+
+The model that I will consider is the **DALL-E**  , it is machine learning models developed by OpenAI to generate digital images from  natural language descriptions.  Let me mention that there is now a new  version called **DALL-E 2**   which is designed  to generate more realistic images at higher resolutions that "can combine concepts, attributes, and styles
 
 <img src="assets/images/posts/README/dalle2.jpg" alt="dalle2" style="zoom:50%;" />
 
@@ -96,15 +102,13 @@ In Sagemaker we will choose the Notebook instances, click **create a notebook in
 
 
 
-then we name our server as **Sagemaker** . There are a vast of types of AWS Instaces, for our GPU consuming   I suggest use the Amazon EC2 G4 instances that  provide the latest generation **NVIDIA T4 GPUs**, Amazon Web Services custom Intel Cascade Lake CPUs, up to **100 Gbps** of networking throughput, and up to **1.8 TB** of local NVMe storage.
+then we name our server as **Sagemaker** . There are a vast of types of AWS Instaces, for our GPU consuming   I suggest use the Amazon EC2 G4 instances that  provide the latest generation **NVIDIA T4 GPUs**.
 
 Moreover **Amazon EC2 G4 instances** deliver a cost-effective GPU instance for deploying machine learning models in production and graphics-intensive applications. 
 
 These instances deliver up to 65 TFLOPs of FP16 performance to accelerate machine learning inference applications and ray-tracing cores to accelerate graphics workloads such as graphics workstations, video transcoding, and game streaming in the cloud.
 
-Let us then choose  **ml.g4dn.xlarge** which has the following specs:
 
-1 GPU, 4 vCPUs, 16 GiB of memory, 125 NVMe SSD, up to 25 Gbps network performance
 
 **You should be careful,** choose the appropriate instance, to avoid extra costs!!!
 
@@ -117,15 +121,21 @@ Let us then choose  **ml.g4dn.xlarge** which has the following specs:
 
 In particular this instance **ml.g4dn.xlarge**   , during the writing time, you will pay **$0.7364 per Hour** so  be sure to delete your Instance after you finish.
 
-![image-20220823233450376](assets/images/posts/README/image-20220823233450376.png)
 
- we choose our **Default VPC** and we choose the first subnet that you can see then.
 
-in the Security Group we select **SageMaker-Security** 
+In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance
+
+  **ml.g4dn.xlarge** which has the following specs: 1 GPU, 4 vCPUs, 16 GiB of memory, 125 NVMe SSD, up to 25 Gbps network performance
+
+in addition, we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**
+
+![image-20220829161017050](assets/images/posts/README/image-20220829161017050.png)
+
+ In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
 
 ![image-20220828215101584](assets/images/posts/README/image-20220828215101584.png)
 
-and finally create the notebook instance.
+and finally **create the notebook instance** and we wait until the Status changes from Pending to InService.
 
 ![image-20220824224136683](assets/images/posts/README/image-20220824224136683.png)
 
