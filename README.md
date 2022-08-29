@@ -1,12 +1,10 @@
-# How  to deploy a Machine Learning Model WebApp on AWS Cloud SageMaker Notebook - DALLE 
+# How  to deploy a Machine Learning Model WebApp on AWS Cloud SageMaker Notebook
 
 Sometimes when you need to deploying **machine learning models** in **production** and **graphics-intensive applications** and you have not enough power computing to satisfy your needs. Then you can use the following blog post to solve this issue. Instead of upgrade your  cluster of your company or personal computer, you can use the cloud. 
 
 With **Amazon Web Services** you can simply  create an instance with the adequate requirements for your Web Application .
 
-In this blog post I will show how to create a web application on **AWS SageMaker** Notebook and 
-
-connect with from your computer.
+In this blog post I will show how to create a web application on **AWS SageMaker** Notebook and connect with from your computer.
 
 In particular we will create an application that will create a **video from a text** by using one of the amazing techniques to generation of images from a text by using **DALL-E**.
 
@@ -32,7 +30,7 @@ a) **Reverse proxy**
 
 b) **Bastion box.**  
 
-In a previous blog port we have discussed the [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH), which is based on the bastion box. In this new blog post we focus in a more simple solution that is given by the Reverse proxy.
+In a previous blog post we have discussed the [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH), which is based on the **Bastion box**. This is useful when you want to control all the pieces of your Cloud Infrastructure. In this new blog post we focus in a more simpler solution that is given by the **Reverse proxy.**
 
 # Reverse proxy Solution
 
@@ -42,7 +40,7 @@ A **reverse proxy** is a type of proxy server.  Unlike a traditional proxy serve
 
 Due to **AWS Sagemaker** notebook officially does not support **ssh** support natively and we want to connect from our Laptop to our Sagemaker Server. We are going to a use a simply application called  **ngrok**  that will allow us connect it to our server.
 
-### Step 1 - Creation of ngrok Account
+## Step 1 - Creation of ngrok Account
 
 
 
@@ -204,7 +202,7 @@ ngrok.set_auth_token(YOUR_TOKEN)
 IPython.Application.instance().kernel.do_shutdown(True)
 ```
 
-now the tokem
+now the token
 
 ```python
 # If is installed the token you can use this code
@@ -275,7 +273,7 @@ Somehow Chrome marked ngrok.io like a dangerous, to avoid this type of issues yo
 
 After you have used you app you can close everything
 
-```
+```python
 print(" Shutting down server.")
 ngrok.kill()
 gr.close_all()
@@ -338,20 +336,3 @@ you will obtain something like
 
 
 after all the requirements well installed.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### 
-
