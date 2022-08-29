@@ -82,8 +82,6 @@ and outbout **Anywhere**
 
 once was created we can continue to create a new SageMaker notebook.
 
-
-
 ### Step 3 - Creation of SageMaker Notebook
 
 Head to the [AWS Console](https://aws.amazon.com/console/) and from there, under  All Services, choose **SageMaker**. 
@@ -108,17 +106,19 @@ These instances deliver up to 65 TFLOPs of FP16 performance to accelerate machin
 
 **You should be careful,** choose the appropriate instance, to avoid extra costs!!!
 
-| Accelerated Computing | vCPU | Memory  | Price per Hour |
-| :-------------------: | :--: | :-----: | :------------: |
-|     ml.p3.2xlarge     |  8   | 61 GiB  |     $3.825     |
-|     ml.p3.8xlarge     |  32  | 244 GiB |    $14.688     |
-|    ml.p3.16xlarge     |  64  | 488 GiB |    $28.152     |
-|    ml.g4dn.xlarge     |  4   | 16 GiB  |    $0.7364     |
-|    ml.g4dn.2xlarge    |  8   | 32 GiB  |     $0.94      |
 
-In particular this instance **ml.g4dn.2xlarge**   , during the writing time, you will pay **$0.94 per Hour** so  be sure to delete your Instance after you finish.
 
-In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g4dn.2xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
+
+
+| Accelerated Computing | vCPU | Memory  | Price per Hour | **GPU Memory (GiB)** |
+| :-------------------: | :--: | :-----: | :------------: | -------------------- |
+|     ml.g5.xlarge      |  4   | 16 GiB  |     $1.41      | 24                   |
+|     ml.p3.8xlarge     |  32  | 244 GiB |    $14.688     | 64                   |
+|    ml.g5.12xlarge     |  48  | 192 GiB |     $7.09      | 96                   |
+
+In particular this instance **ml.g5.xlarge**   , during the writing time, you will pay **$1.41 per Hour** so  be sure to delete your Instance after you finish.
+
+In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g5.xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
 
 ![image-20220829180729972](assets/images/posts/README/image-20220829180729972.png)
 
@@ -140,7 +140,7 @@ Click **Open Jupyter Lab**  and  click **File** > **New**>**Terminal**
 
 
 
-then in the terminal type
+To install the Python packages in the correct Conda environment, first activate the environment before running **pip install** or **conda install** from the terminal.
 
 ```
 source activate python3
@@ -152,19 +152,17 @@ and there you can  type
 conda info --envs
 ```
 
-to see all your possible enviroments by defult given in SageMaker
+as you see , in **SageMaker** you have different environments ready to work,
 
 ![image-20220828192231098](assets/images/posts/README/image-20220828192231098.png)
 
-For this project, we are going to use  `pytorch_p38`
+for this project, we are going to use  `pytorch_p38`
 
 ```
 conda activate pytorch_p38
 ```
 
-If you decided use Jupyter insted JupyterLab you skip the following code:
-
-and we install pyngrok  to get the reverse proxy  and gradio to test the enviroment
+Let us install **pyngrok**  to get the reverse proxy  and **gradio** to test the environment
 
 ```
 pip install pyngrok gradio
@@ -174,35 +172,73 @@ pip install pyngrok gradio
 
 
 
+
+
+
+
+### Step 4 - Download the project
+
+For this project we are interested to run a **WebApp** that will convert **Text to Video**. 
+
+First enter to **SageMaker** folder
+
+```
+cd SageMaker
+```
+
+then
+
+```
+git clone https://github.com/ruslanmv/How-to-run-Gradio-on-SageMaker-Notebook.git
+```
+
+```
+cd How-to-run-Gradio-on-SageMaker-Notebook
+```
+
+```
+cd Sagemaker
+```
+
+```
+pip install -r requirements.txt
+```
+
+you will obtain something like
+
+![image-20220829170233221](assets/images/posts/README/image-20220829170233221.png)
+
+after all the requirements well installed.
+
 ## Step 4 - Setup pyngrok
 
-Let us open a new notebook 
+Let  click File > New > Text File
 
-![image-20220828220454086](assets/images/posts/README/image-20220828220454086.png)
-
-
-
-and we select the kernel  **pytorch_p38** and name it with **reverse_proxy**
-
-![image-20220828220558412](assets/images/posts/README/image-20220828220558412.png)
+![image-20220829203610311](assets/images/posts/README/image-20220829203610311.png)
 
 
 
-then create new text file
-
-![image-20220829175217082](assets/images/posts/README/image-20220829175217082.png)
-
-that your rename to  **data.json**
-
-with your personal token, for example
+that your rename to  **data.json**, and paste your token between the " "  , for example
 
 ```
 {
-    "token": "2DwxLpbhkdalskdalskjdalksjdlakjdlakjwcgL3Z2KtUz11"
+    "token": "2DwxLpbhkJVZ2UdJ2Ls0p8tlxTB_6oshozHRwcgL3Z2KtUz11"
 }
 ```
 
-then for the notetbook r**everse_proxy** copy the following code:
+Let us open a the **reverse_proxy.ipynb** notebook
+
+![image-20220829203255680](assets/images/posts/README/image-20220829203255680.png)
+
+
+
+be sure that you are using the kernel  **pytorch_p38** 
+
+![image-20220829204255242](assets/images/posts/README/image-20220829204255242.png)
+
+
+
+then for the notetbook r**everse_proxy** run the fill cell
 
 ```python
 #Setup of your token for first time
@@ -220,7 +256,13 @@ ngrok.set_auth_token(YOUR_TOKEN)
 IPython.Application.instance().kernel.do_shutdown(True)
 ```
 
-then  you can run
+if you see
+
+```
+{'status': 'ok', 'restart': True}
+```
+
+means that was done well the authentication, then run the next cells
 
 ```python
 # If is installed the token you can use this code
@@ -236,7 +278,7 @@ display(HTML(f'<b><a target="blank" href="{http_url}">Load test: {http_url}</a><
 
 You will have something similar like:
 
-**[Load test: https://1ce4-34-236-55-223.ngrok.io](https://1ce4-34-236-55-223.ngrok.io/)**
+**[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
 
 ```python
 # Open a SSH tunnel
@@ -247,7 +289,7 @@ display(HTML(f'<b><a target="blank" href="{ssh_tunnel}">SSH test: {ssh_tunnel}</
 
 You will have something similar like:
 
-**["localhost:22"">SSH test: NgrokTunnel: "tcp://8.tcp.ngrok.io:12995" -> "localhost:22"](ngroktunnel:)**
+**["localhost:22"">SSH test: NgrokTunnel: "tcp://4.tcp.ngrok.io:10753" -> "localhost:22"](ngroktunnel:)**
 
 you can see your status
 
@@ -259,18 +301,24 @@ print(tunnels)
 and the output is
 
 ```
-[<NgrokTunnel: "https://1ce4-34-236-55-223.ngrok.io" -> "http://localhost:7860">, <NgrokTunnel: "tcp://8.tcp.ngrok.io:12995" -> "localhost:22">]
+[<NgrokTunnel: "https://a5c3-34-236-55-223.ngrok.io" -> "http://localhost:7860">, <NgrokTunnel: "tcp://4.tcp.ngrok.io:10753" -> "localhost:22">]
 ```
 
-
+Now we are ready to test our enviroment.
 
 ## Step 5 Testing Environment
 
-Now create a new notebook called  **hello_world,** you can add the following code
+Select the  **hello_world.ipynb** 
+
+![image-20220829204601379](assets/images/posts/README/image-20220829204601379.png)
+
+
+
+and run the following cell
 
 ```python
 import gradio as gr
-def test():
+def test(): 
     def greet(name):
       return "Hello " + name + "!"
     iface = gr.Interface(fn=greet, inputs="text", outputs="text")
@@ -283,21 +331,23 @@ then
 test()
 ```
 
-After is running this  return back to your reverse_proxy notebook and open the link
+After is running this  return back to your **reverse_proxy** notebook and click the link
 
-**[https://1ce4-34-236-55-223.ngrok.io](https://1ce4-34-236-55-223.ngrok.io/)**
+**[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
+
+then click **Visit Site**
+
+ ![image-20220829204825725](assets/images/posts/README/image-20220829204825725.png)
 
 and type your name for example,
 
-![image-20220829000107971](assets/images/posts/README/image-20220829000107971.png)Dont worry if 
+![image-20220829205044024](assets/images/posts/README/image-20220829205044024.png)Don't worry if  If Chrome says: Deceptive site ahead Attackers ... dont worry. You click visit this site.
 
-If Chrome says: Deceptive site ahead Attackers on **8c5c-34-236-55-223.ngrok.io** ... dont worry. You click visit this site.
+Alternative way to avoid this type of issues you can select another method to log into SageMaker,  like in previous blog  [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH).
 
-Somehow Chrome marked ngrok.io like a dangerous, to avoid this type of issues you can select another method to log into SageMaker,  like in previous blog  [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH).
+If your you **pass the test**, then 
 
-If your you pass the test, then 
-
-you can close gradio
+you can close Gradio
 
 ```python
 msg = 'Would you like stop gradio server?'
@@ -312,17 +362,13 @@ by pressing y
 ```
 Would you like stop gradio server? (y/N)  y
  Shutting down gradio server.
-Closing server running on port: 8089
+Closing server running on port: 7860
 ```
 
-
-
-## Ngrok in the terminal (optional)
-
-For complementary you can use also the terminal to use ngrok
+For complementary you can use also the terminal to use ngrok, but we wont use for this project
 
 ```
- ngrok authtoken YOUR_TOKEN_HERE
+ngrok authtoken YOUR_TOKEN_HERE
 ```
 
 and
@@ -335,71 +381,23 @@ ngrok http 8089
 
 
 
-when you click ctrl+c, the server is stoped, but we wont use the ngrok in the terminal.
+when you click ctrl+c, the server is stoped.
 
 
 
 # Creation of Awesome Video Story - Text to Video 
 
-
-
 Finally  we have built all the Infrastructure in the cloud needed to create our amazing video story.
 
-Open a new terminal. To install the Python packages in the correct Conda environment, first activate the environment before running **pip install** or **conda install** from the terminal.
+Go to your Sagemaker folder and open **video_story_creator_gradio.ipynb**
 
-```
-sh-4.2$ source activate python3
-```
-
-To activate any conda environment, run the following command in the terminal.
-
-```
-(python3) sh-4.2$ conda activate pytorch_p38
-```
-
-When you run this command, any packages installed using conda or pip are installed in the environment.
-
-Let us clone the repostory, enter to **Sagemaker** folder
-
-```
-cd Sagemaker
-```
-
-then
-
-```
-git clone https://github.com/ruslanmv/Text-to-Video-Story.git
-```
-
-```
-cd Text-to-Video-Story
-```
-
-```
-cd sagemaker
-```
-
-```
-pip install -r requirements.txt
-```
-
-you will obtain something like
-
-![image-20220829170233221](assets/images/posts/README/image-20220829170233221.png)
-
-after all the requirements well installed. Let us use **Jupyter**.
-
-Now let us open  **Jupyter**
-
-![image-20220829170332633](assets/images/posts/README/image-20220829170332633.png)
-
-then we choose **video_story_creator_gradio**
-
-![image-20220829170533099](assets/images/posts/README/image-20220829170533099.png)
+![image-20220829210152091](assets/images/posts/README/image-20220829210152091.png)
 
 
 
-you run the first cell
+
+
+Then  run the first cell
 
 ```python
 # Step 2 - Importing Libraries
@@ -443,7 +441,7 @@ if use_gpu == True : log_gpu_memory()
 #model.to(device)
 ```
 
-![image-20220829171000145](assets/images/posts/README/image-20220829171000145.png)
+![image-20220829210506899](assets/images/posts/README/image-20220829210506899.png)
 
 You can see that we have a Great **Tesla T4** GPU.
 
@@ -451,12 +449,12 @@ Run the next shell
 
 ![image-20220829171251772](assets/images/posts/README/image-20220829171251772.png)
 
-and later you can enter to your url, like mine
+then return back to your **reverse_proxy.ipynb**  
 
-**[Load test: https://6119-34-236-55-223.ngrok.io](https://6119-34-236-55-223.ngrok.io/)**
+**[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
 
 and will open
 
-![image-20220829171810185](assets/images/posts/README/image-20220829171810185.png)
+![image-20220829210815583](assets/images/posts/README/image-20220829210815583.png)
 
 when you click Generate Video, in your notebook you can see the progress
