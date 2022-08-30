@@ -98,21 +98,18 @@ In Sagemaker we will choose the Notebook instances, click **create a notebook in
 
 then we name our server as **Sagemaker** . There are a vast of types of AWS Instaces, for our GPU consuming   
 
-
-
-Due to our WebApp requires more than **16 GPU Memory (GiB)** we will  choose the ml.g5 instances.
-
-**You should be careful,** choose the appropriate instance, to avoid extra costs!!!
+We choose the ml.g4dn.xlarge instances. **You should be careful,** choose the appropriate instance, to avoid extra costs!!!
 
 | Accelerated Computing | vCPU | Memory  | Price per Hour | **GPU Memory (GiB)** |
 | :-------------------: | :--: | :-----: | :------------: | -------------------- |
 |     ml.g5.xlarge      |  4   | 16 GiB  |     $1.41      | 24                   |
 |     ml.p3.8xlarge     |  32  | 244 GiB |    $14.688     | 64                   |
-|  **ml.g5.12xlarge**   |  48  | 192 GiB |   **$7.09**    | 96                   |
+|    ml.g5.12xlarge     |  48  | 192 GiB |     $7.09      | 96                   |
+|    ml.g4dn.xlarge     |  4   | 16 GiB  |    $0.7364     | 16                   |
 
-In particular this instance **ml.g5.12xlarge** , during the writing time, you will pay **$7.09 per Hour** so  be sure to delete your Instance after you finish!!!.
+In particular this instance **ml.g4dn.xlarge** , during the writing time, you will pay **$0.7364 per Hour** so  be sure to delete your Instance after you finish!!!.
 
-In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g5.12xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
+In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g4dn.xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
 
 ![image-20220829224436367](assets/images/posts/README/image-20220829224436367.png)
 
@@ -122,7 +119,7 @@ In the **Notebook instance settings**, we name the instance as **Sagemaker** and
 
 and finally **create the notebook instance** and we wait until the Status changes from **Pending** to **InService.**
 
-![image-20220829224714472](assets/images/posts/README/image-20220829224714472.png)
+![image-20220829235315742](assets/images/posts/README/image-20220829235315742.png)
 
 
 
@@ -150,11 +147,31 @@ as you see , in **SageMaker** you have different environments ready to work,
 
 ![image-20220828192231098](assets/images/posts/README/image-20220828192231098.png)
 
-for this project, we are going to use  `pytorch_p38`
+for this project, we are going to create **our enviroment** 
 
 ```
-conda activate pytorch_p38
+conda create --name text2video python=3.8
 ```
+
+To activate any conda environment, run the following command in the terminal.
+
+```
+conda activate text2video
+```
+
+To use your new conda environments with notebooks, make sure the `ipykernel` package is installed in the environment.
+
+```
+conda install ipykernel
+```
+
+After you have created the environment, you can select it as the kernel for your notebook.
+
+```
+python -m ipykernel install --user --name text2video --display-name "Python3 (text2video)"
+```
+
+![image-20220829235712239](assets/images/posts/README/image-20220829235712239.png)
 
 Let us install **pyngrok**  to get the reverse proxy  and **gradio** to test the environment
 
@@ -162,11 +179,7 @@ Let us install **pyngrok**  to get the reverse proxy  and **gradio** to test the
 pip install pyngrok gradio
 ```
 
-![image-20220828220430504](assets/images/posts/README/image-20220828220430504.png)
-
-
-
-
+![image-20220829235839888](assets/images/posts/README/image-20220829235839888.png)
 
 
 
@@ -200,25 +213,17 @@ pip install -r requirements.txt
 
 you will obtain something like
 
-![image-20220829170233221](assets/images/posts/README/image-20220829170233221.png)
+![image-20220830000124378](assets/images/posts/README/image-20220830000124378.png)
 
 after all the requirements well installed.
 
 ## Step 4 - Setup pyngrok
 
-Then select **data.json**, open with and editor
+Then select **data.json**, open with editor
 
 ![image-20220829222215887](assets/images/posts/README/image-20220829222215887.png)
 
-
-
-
-
-![image-20220829203610311](assets/images/posts/README/image-20220829203610311.png)
-
-
-
-and paste your token between the " "  , for example
+and paste your token between the " "   and save with ctrl+s
 
 ```
 {
@@ -232,13 +237,13 @@ Let us open a the **reverse_proxy.ipynb** notebook
 
 
 
-be sure that you are using the kernel  **pytorch_p38** 
+be sure that you are using the kernel  **text2video** 
 
 ![image-20220829204255242](assets/images/posts/README/image-20220829204255242.png)
 
 
 
-then for the notetbook r**everse_proxy** run the fill cell
+then for the notetbook **reverse_proxy** run the fill cell
 
 ```python
 #Setup of your token for first time
@@ -298,7 +303,7 @@ tunnels = ngrok.get_tunnels()
 print(tunnels)
 ```
 
-and the output is
+and the output is	
 
 ```
 [<NgrokTunnel: "https://a5c3-34-236-55-223.ngrok.io" -> "http://localhost:7860">, <NgrokTunnel: "tcp://4.tcp.ngrok.io:10753" -> "localhost:22">]
@@ -441,7 +446,7 @@ if use_gpu == True : log_gpu_memory()
 #model.to(device)
 ```
 
-![image-20220829223202893](assets/images/posts/README/image-20220829223202893.png)
+![image-20220829232420896](assets/images/posts/README/image-20220829232420896.png)
 
 You can see that we have a Great **NVIDIA A10G** GPU.
 
