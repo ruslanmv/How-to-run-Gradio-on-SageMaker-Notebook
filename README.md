@@ -223,11 +223,11 @@ cd SageMaker
 then
 
 ```
-git clone https://github.com/ruslanmv/How-to-run-Gradio-on-SageMaker-Notebook.git
+git clone https://github.com/ruslanmv/How-to-run-WebApp-SageMaker-Notebook.git
 ```
 
 ```
-cd How-to-run-Gradio-on-SageMaker-Notebook
+cd How-to-run-WebApp-on-SageMaker-Notebook
 ```
 
 ```
