@@ -223,7 +223,7 @@ Then select **data.json**, open with editor
 
 ![image-20220829222215887](assets/images/posts/README/image-20220829222215887.png)
 
-and paste your token between the " "   and save with ctrl+s
+and paste your token between the " "   and save with **ctrl+s**
 
 ```
 {
@@ -237,9 +237,9 @@ Let us open a the **reverse_proxy.ipynb** notebook
 
 
 
-be sure that you are using the kernel  **text2video** 
+be sure that you are using the kernel  **Python 3 (text2video)** 
 
-![image-20220829204255242](assets/images/posts/README/image-20220829204255242.png)
+![image-20220830000352344](assets/images/posts/README/image-20220830000352344.png)
 
 
 
@@ -283,7 +283,7 @@ display(HTML(f'<b><a target="blank" href="{http_url}">Load test: {http_url}</a><
 
 You will have something similar like:
 
-**[Load test: https://944e-34-236-55-223.ngrok.io](https://944e-34-236-55-223.ngrok.io/)**
+**[Load test: https://e870-34-236-55-223.ngrok.io](https://e870-34-236-55-223.ngrok.io/)**
 
 ```python
 # Open a SSH tunnel
@@ -294,7 +294,7 @@ display(HTML(f'<b><a target="blank" href="{ssh_tunnel}">SSH test: {ssh_tunnel}</
 
 You will have something similar like:
 
-**["localhost:22"">SSH test: NgrokTunnel: "tcp://2.tcp.ngrok.io:14454" -> "localhost:22"](ngroktunnel:)**
+**["localhost:22"">SSH test: NgrokTunnel: "tcp://8.tcp.ngrok.io:15159" -> "localhost:22"](ngroktunnel:)**
 
 you can see your status
 
@@ -306,20 +306,20 @@ print(tunnels)
 and the output is	
 
 ```
-[<NgrokTunnel: "https://a5c3-34-236-55-223.ngrok.io" -> "http://localhost:7860">, <NgrokTunnel: "tcp://4.tcp.ngrok.io:10753" -> "localhost:22">]
+[<NgrokTunnel: "tcp://8.tcp.ngrok.io:15159" -> "localhost:22">, <NgrokTunnel: "https://e870-34-236-55-223.ngrok.io" -> "http://localhost:7860">]
 ```
 
 Now we are ready to test our enviroment.
 
 ## Step 5 Testing Environment
 
-Select the  **hello_world.ipynb** 
+Open the  **hello_world.ipynb** , verify that you are in the kernel  Python 3 (text2video) 
 
 ![image-20220829204601379](assets/images/posts/README/image-20220829204601379.png)
 
 
 
-and run the following cell
+and run he first cell
 
 ```python
 import gradio as gr
@@ -338,7 +338,7 @@ test()
 
 After is running this  return back to your **reverse_proxy** notebook and click the link
 
-**[Load test: https://944e-34-236-55-223.ngrok.io](https://944e-34-236-55-223.ngrok.io/)**
+**[Load test: https://e870-34-236-55-223.ngrok.io](https://e870-34-236-55-223.ngrok.io/)**
 
 then click **Visit Site**
 
@@ -350,9 +350,7 @@ and type your name for example,
 
 Alternative way to avoid this type of issues you can select another method to log into SageMaker,  like in previous blog  [ How to connect to Sagemaker via SSH](https://ruslanmv.com/blog/How-to-connect-to-Sagemaker-Notebook-via-SSH).
 
-If your you **pass the test**, then 
-
-you can close Gradio
+If your you **pass the test**, then  you can return to **hello_world.ipynb** and close **Gradio**  running the following cell
 
 ```python
 msg = 'Would you like stop gradio server?'
