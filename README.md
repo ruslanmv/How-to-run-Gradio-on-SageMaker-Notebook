@@ -12,8 +12,6 @@ The video that I am interested to create is about the **The Hare & the Tortoise*
 
 
 
-
-
 The model that I will consider is the **DALL-E**  , it is machine learning models developed by OpenAI to generate digital images from  natural language descriptions.  Let me mention that there is now a new  version called **DALL-E 2**   which is designed  to generate more realistic images at higher resolutions that "can combine concepts, attributes, and styles
 
 <img src="assets/images/posts/README/dalle2.jpg" alt="dalle2" style="zoom:50%;" />
@@ -113,6 +111,27 @@ In the **Notebook instance settings**, we name the instance as **Sagemaker** and
 
 ![image-20220829224436367](assets/images/posts/README/image-20220829224436367.png)
 
+**To save theconda environments after your SageMaker machine stops.**
+
+In AWS console, go to SageMaker -> Lifecycle configurations
+
+Create a new lifecycle configuration. If your machines already use some lifecycle configuration, just open that one.
+
+Under Scripts section make sure “Start notebook” tab is opened
+
+Paste this code at the end
+
+```
+#!/usr/bin/env bash
+set -e
+
+# set up persisted conda environments
+curl https://raw.githubusercontent.com/ruslanmv/Save-conda-environments-on-Sagemaker/master/start.sh | bash
+
+```
+
+
+
  In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
 
 ![image-20220828215101584](assets/images/posts/README/image-20220828215101584.png)
@@ -162,7 +181,7 @@ conda activate text2video
 To use your new conda environments with notebooks, make sure the `ipykernel` package is installed in the environment.
 
 ```
-conda install ipykernel
+conda install ipykernel -y
 ```
 
 After you have created the environment, you can select it as the kernel for your notebook.
@@ -172,6 +191,12 @@ python -m ipykernel install --user --name text2video --display-name "Python3 (te
 ```
 
 ![image-20220829235712239](assets/images/posts/README/image-20220829235712239.png)
+
+in addition we need
+
+```
+conda install ffmpeg -c conda-forge -y
+```
 
 Let us install **pyngrok**  to get the reverse proxy  and **gradio** to test the environment
 
