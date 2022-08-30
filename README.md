@@ -130,6 +130,8 @@ curl https://raw.githubusercontent.com/ruslanmv/Save-conda-environments-on-Sagem
 
 ```
 
+then click **Create configuration**.
+
 
 
  In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
