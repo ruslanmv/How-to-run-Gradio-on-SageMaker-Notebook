@@ -97,7 +97,9 @@ In particular this instance **ml.g4dn.xlarge** , during the writing time, you wi
 
 In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g4dn.xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
 
-![image-20220829224436367](assets/images/posts/README/image-20220829224436367.png)
+![image-20220914143015251](../assets/images/posts/README/image-20220914143015251.png)
+
+
 
 **To save the conda environments after your SageMaker machine stops.**
 
@@ -109,18 +111,22 @@ Under Scripts section make sure “Start notebook” tab is opened
 
 Paste this code at the end
 
-```
+```bash
 #!/usr/bin/env bash
 set -e
-
 # set up persisted conda environments
 curl https://raw.githubusercontent.com/ruslanmv/Save-conda-environments-on-Sagemaker/master/start.sh | bash
-
 ```
 
 then click **Create configuration**.
 
- In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
+ In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group 
+
+we create create one with the In **SSH** and port **7860**. If you are planning to use Gradio, 5000 for **Flask** etc... And you can choose the input my IP address.
+
+![image-20220914144234543](../assets/images/posts/README/image-20220914144234543.png)
+
+we select **SageMaker-Security** 
 
 ![image-20220828215101584](assets/images/posts/README/image-20220828215101584.png)
 
@@ -178,6 +184,8 @@ After you have created the environment, you can select it as the kernel for your
 python -m ipykernel install --user --name YourKernel --display-name "Python 3 (Your Kernel)"
 ```
 
+![image-20220914145054454](../assets/images/posts/README/image-20220914145054454.png)
+
 # Step 4 - Hello World project
 
 First enter to **SageMaker** folder
@@ -206,11 +214,13 @@ in addition we need we need install **pyngrok**  to get the reverse proxy  and *
 pip install -r requirements.txt
 ```
 
-
-
 after all the requirements well installed.
 
-## Step 4 - Setup pyngrok
+![image-20220914145443160](../assets/images/posts/README/image-20220914145443160.png)
+
+
+
+## Step 4 - Setup Pyngrok
 
 Then select **data.json**, open with editor
 
@@ -232,7 +242,7 @@ Let us open a the **reverse_proxy.ipynb** notebook
 
 be sure that you are using the kernel  **Python 3 (Your Kernel)** 
 
-![image-20220830000352344](assets/images/posts/README/image-20220830000352344.png)
+![image-20220914145829235](../assets/images/posts/README/image-20220914145829235.png)
 
 
 
@@ -379,10 +389,7 @@ ngrok http 8089
 
 when you click ctrl+c, the server is stoped.
 
- 
+ Finally  we have built a simple infrastructure in the cloud needed to create our amazing  projects.  If you want to create a **WebApp** that will create
 
-Finally  we have built a simple infrastructure in the cloud needed to create our amazing  projects.  If you want to create a WebApp that will create
-
-Text to Video 
 
 
