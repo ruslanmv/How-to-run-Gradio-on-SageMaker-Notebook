@@ -157,13 +157,13 @@ as you see , in **SageMaker** you have different environments ready to work,
 For example, if we want to create a project where the name is  VideoMessage, we type
 
 ```
-conda create --name VideoMessage python=3.7.13
+conda create --name YourKernel python=3.7.13
 ```
 
 To activate any conda environment, run the following command in the terminal.
 
 ```
-conda activate VideoMessage
+conda activate YourKernel
 ```
 
 To use your new conda environments with notebooks, make sure the `ipykernel` package is installed in the environment.
@@ -175,10 +175,10 @@ conda install ipykernel -y
 After you have created the environment, you can select it as the kernel for your notebook.
 
 ```
-python -m ipykernel install --user --name VideoMessage --display-name "Python3 (VideoMessage)"
+python -m ipykernel install --user --name YourKernel --display-name "Python 3 (Your Kernel)"
 ```
 
-# Step 4 - Demo project
+# Step 4 - Hello World project
 
 First enter to **SageMaker** folder
 
@@ -230,7 +230,7 @@ Let us open a the **reverse_proxy.ipynb** notebook
 
 
 
-be sure that you are using the kernel  **Python 3 (text2video)** 
+be sure that you are using the kernel  **Python 3 (Your Kernel)** 
 
 ![image-20220830000352344](assets/images/posts/README/image-20220830000352344.png)
 
@@ -379,48 +379,10 @@ ngrok http 8089
 
 when you click ctrl+c, the server is stoped.
 
+ 
+
+Finally  we have built a simple infrastructure in the cloud needed to create our amazing  projects.  If you want to create a WebApp that will create
+
+Text to Video 
 
 
-# Text to Video 
-
-Finally  we have built all the Infrastructure in the cloud needed to create our amazing video story.
-
-Go to your **Sagemaker** folder of the repo and open **video_story_creator_gradio.ipynb**
-
-![image-20220829210152091](assets/images/posts/README/image-20220829210152091.png)
-
-
-
-
-
-Then  run the first cell
-
-```python
-# Analsis of GPU usage
-def log_gpu_memory():
-    print(subprocess.check_output('nvidia-smi').decode('utf-8'))
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(device)
-use_gpu = True if torch.cuda.is_available() else False
-if use_gpu == True : log_gpu_memory() 
-#transfer model
-#model.to(device)
-```
-
-![image-20220829232420896](assets/images/posts/README/image-20220829232420896.png)
-
-You can see that we have a Great **NVIDIA A10G** GPU.
-
-Run the next shell
-
-![image-20220829171251772](assets/images/posts/README/image-20220829171251772.png)
-
-then return back to your previous link and refresh
-
-**[Load test: https://a5c3-34-236-55-223.ngrok.io](https://a5c3-34-236-55-223.ngrok.io/)**
-
-you will have
-
-![image-20220829210815583](assets/images/posts/README/image-20220829210815583.png)
-
-when you click **Generate Video**, to test our **WebApp**, in your notebook you can see the progress
