@@ -6,21 +6,7 @@ With **Amazon Web Services** you can simply  create an instance with the adequat
 
 In this blog post I will show how to create a web application on **AWS SageMaker** Notebook and connect with from your computer.
 
-In particular we will create an application that will create a **video from a text** by using one of the amazing techniques to generation of images from a text by using **DALL-E**.
-
-The video that I am interested to create is about the **The Hare & the Tortoise** and the  **Selfish Giant**, I am going to create a WebApplication that will create from the text a video story based on the experienced that the machine learning model has.
-
-
-
-The model that I will consider is the **DALL-E**  , it is machine learning models developed by OpenAI to generate digital images from  natural language descriptions.  Let me mention that there is now a new  version called **DALL-E 2**   which is designed  to generate more realistic images at higher resolutions that "can combine concepts, attributes, and styles
-
-<img src="assets/images/posts/README/dalle2.jpg" alt="dalle2" style="zoom:50%;" />
-
-
-
-**DALLE -2** Generated this image when given the prompt "Teddy bears working on new AI research underwater with 1990s technology".
-
-(Picture from Wikipedia)
+In particular we will create an application that will create a 
 
 ## Architecture
 
@@ -42,7 +28,7 @@ A **reverse proxy** is a type of proxy server.  Unlike a traditional proxy serve
 
 Due to **AWS Sagemaker** notebook officially does not support **ssh** support natively and we want to connect from our Laptop to our Sagemaker Server. We are going to a use a simply application called  **ngrok**  that will allow us connect it to our server.
 
-## Step 1 - Creation of ngrok Account
+# Step 1 - Creation of ngrok Account
 
 
 
@@ -94,24 +80,26 @@ In Sagemaker we will choose the Notebook instances, click **create a notebook in
 
 
 
-then we name our server as **Sagemaker** . There are a vast of types of AWS Instaces, for our GPU consuming   
+then we name our server as **SageMaker** . There are a vast of types of AWS Instances, for our GPU consuming   
 
-We choose the ml.g4dn.xlarge instances. **You should be careful,** choose the appropriate instance, to avoid extra costs!!!
+We choose the **ml.g4dn.4xlarge** instances. **You should be careful,** choose the appropriate instance, to avoid extra costs!!!
 
 | Accelerated Computing | vCPU | Memory  | Price per Hour | **GPU Memory (GiB)** |
 | :-------------------: | :--: | :-----: | :------------: | -------------------- |
-|     ml.g5.xlarge      |  4   | 16 GiB  |     $1.41      | 24                   |
 |     ml.p3.8xlarge     |  32  | 244 GiB |    $14.688     | 64                   |
 |    ml.g5.12xlarge     |  48  | 192 GiB |     $7.09      | 96                   |
+|    ml.g4dn.8xlarge    |  32  | 128 GiB |     $2.72      | 16                   |
+|  **ml.g4dn.4xlarge**  |  16  | 64 GiB  |     $1.505     | 16                   |
+|     ml.g5.xlarge      |  4   | 16 GiB  |     $1.41      | 24                   |
 |    ml.g4dn.xlarge     |  4   | 16 GiB  |    $0.7364     | 16                   |
 
-In particular this instance **ml.g4dn.xlarge** , during the writing time, you will pay **$0.7364 per Hour** so  be sure to delete your Instance after you finish!!!.
+In particular this instance **ml.g4dn.xlarge** , during the writing time, you will pay **$1.505 per Hour** so  be sure to delete your Instance after you finish!!!.
 
 In the **Notebook instance settings**, we name the instance as **Sagemaker** and Notebook Instance **ml.g4dn.xlarge**  we need to add  an extra **Volume Size** of the instance, for this project we choose **30gb**.
 
 ![image-20220829224436367](assets/images/posts/README/image-20220829224436367.png)
 
-**To save theconda environments after your SageMaker machine stops.**
+**To save the conda environments after your SageMaker machine stops.**
 
 In AWS console, go to SageMaker -> Lifecycle configurations
 
@@ -132,8 +120,6 @@ curl https://raw.githubusercontent.com/ruslanmv/Save-conda-environments-on-Sagem
 
 then click **Create configuration**.
 
-
-
  In the **Network section**, we choose our **Default VPC** and we choose the first subnet that you can see then, in the Security Group we select **SageMaker-Security** 
 
 ![image-20220828215101584](assets/images/posts/README/image-20220828215101584.png)
@@ -144,7 +130,7 @@ and finally **create the notebook instance** and we wait until the Status change
 
 
 
-## Step 3 - Setup Sagemaker Notebook
+# Step 3 - Setup SageMaker Notebook
 
 Click **Open Jupyter Lab**  and  click **File** > **New**>**Terminal**
 
@@ -168,16 +154,16 @@ as you see , in **SageMaker** you have different environments ready to work,
 
 ![image-20220828192231098](assets/images/posts/README/image-20220828192231098.png)
 
-for this project, we are going to create **our enviroment** 
+For example, if we want to create a project where the name is  VideoMessage, we type
 
 ```
-conda create --name text2video python=3.8
+conda create --name VideoMessage python=3.7.13
 ```
 
 To activate any conda environment, run the following command in the terminal.
 
 ```
-conda activate text2video
+conda activate VideoMessage
 ```
 
 To use your new conda environments with notebooks, make sure the `ipykernel` package is installed in the environment.
@@ -189,30 +175,10 @@ conda install ipykernel -y
 After you have created the environment, you can select it as the kernel for your notebook.
 
 ```
-python -m ipykernel install --user --name text2video --display-name "Python3 (text2video)"
+python -m ipykernel install --user --name VideoMessage --display-name "Python3 (VideoMessage)"
 ```
 
-![image-20220829235712239](assets/images/posts/README/image-20220829235712239.png)
-
-in addition we need
-
-```
-conda install ffmpeg -c conda-forge -y
-```
-
-Let us install **pyngrok**  to get the reverse proxy  and **gradio** to test the environment
-
-```
-pip install pyngrok gradio
-```
-
-![image-20220829235839888](assets/images/posts/README/image-20220829235839888.png)
-
-
-
-### Step 4 - Download the project
-
-For this project we are interested to run a **WebApp** that will convert **Text to Video**. 
+# Step 4 - Demo project
 
 First enter to **SageMaker** folder
 
@@ -234,13 +200,13 @@ cd How-to-run-WebApp-on-SageMaker-Notebook
 cd Sagemaker
 ```
 
+in addition we need we need install **pyngrok**  to get the reverse proxy  and **gradio** to test the environment
+
 ```
 pip install -r requirements.txt
 ```
 
-you will obtain something like
 
-![image-20220830000124378](assets/images/posts/README/image-20220830000124378.png)
 
 after all the requirements well installed.
 
@@ -415,7 +381,7 @@ when you click ctrl+c, the server is stoped.
 
 
 
-# Creation of Awesome Video Story - Text to Video 
+# Text to Video 
 
 Finally  we have built all the Infrastructure in the cloud needed to create our amazing video story.
 
@@ -428,36 +394,6 @@ Go to your **Sagemaker** folder of the repo and open **video_story_creator_gradi
 
 
 Then  run the first cell
-
-```python
-# Step 2 - Importing Libraries
-from moviepy.editor import *
-from PIL import Image
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM,pipeline
-import gradio as gr
-import torch
-from huggingface_hub import snapshot_download
-from PIL import Image
-from min_dalle import MinDalle
-import torch
-from PIL import Image, ImageDraw, ImageFont
-import textwrap
-from mutagen.mp3 import MP3
-# to speech conversion
-from gtts import gTTS
-from pydub import AudioSegment
-from os import getcwd
-import glob
-import nltk
-import subprocess
-nltk.download('punkt')
-description = " Video Story Generator with Audio \n PS:  Generation of video by using Artifical Intellingence by dalle-mini and distilbart and gtss "
-title = "Video Story Generator with Audio by using dalle-mini and distilbart and gtss  "
-tokenizer = AutoTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
-model = AutoModelForSeq2SeqLM.from_pretrained("sshleifer/distilbart-cnn-12-6")
-```
-
-and then
 
 ```python
 # Analsis of GPU usage
